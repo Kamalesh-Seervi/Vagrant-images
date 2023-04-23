@@ -1,26 +1,82 @@
 # Vagrant-images
 **VM automation**
 
-Tools required:
+1. Install rosetta
+`	/usr/sbin/softwareupdate --install-rosetta --agree-to-license `
+	
+2. Install vagrant with homebrew
+	`brew install vagrant`
+	
+3. Create an account on vmware
+	`https://customerconnect.vmware.com/`
+	
+4. Download & Install VMWare Fusion Tech Preview
+`https://customerconnect.vmware.com/downloads/get-download?downloadGroup=FUS-PUBTP-2021H1`
 
-1. vmware
+download page
 
-To install Vagrant (MacOS)
+5. Create link
+      ` ln -s /Applications/VMWare\ Fusion\ Tech\ Preview.app /Applications/VMWare\ Fusion.app`
 
-`brew install vagrant`
+6. Install vmware provider
+	`Vagrant vmware Utility`
 
-* Steps to use: *
+`https://releases.hashicorp.com/vagrant-vmware-utility/1.0.21/vagrant-vmware-utility_1.0.21_x86_64.dmg`
 
-Step 1:
+7. Install Plugin
+`	vagrant plugin install vagrant-vmware-desktop`
 
-`vagrant up`
+8. Create folder vms/ubuntu, 
+ ` cd`
+ `mkdir Desktop/vms/ubuntu`
+ `cd Desktop/vms/ubuntu`
+ `vim Vagrantfile`
+ 
+ Copy paste  below content in the Vagrantfile
+  
+  Vagrant.configure("2") do |config| 
+  config.vm.box = "spox/ubuntu-arm" 
+  config.vm.box_version = "1.0.0"
+  config.vm.network "private_network", ip: "192.168.56.11"
+  config.vm.provider "vmware_desktop" do |vmware|
+    vmware.gui = true
+    vmware.allowlist_verified = true
+   end
+ end
 
-Step 2: wait until the vmware pops up and does the necessary steps automatically 
-
-`vagrant ssh`
-
-Now you are in the ubuntu bash
-
-* To destroy a vangrant *
-
-` vagrant destroy  `
+  
+       Vagrant.configure("2") do |config| 
+	config.vm.define "web03" do |web03|
+		web03.vm.box = "spox/ubuntu-arm"
+		web03.vm.network "private_network", ip: "192.168.10.15"
+		web03.vm.provider "vmware_desktop" do |vmware|
+		vmware.gui = true
+		vmware.allowlist_verified = true
+		end
+       end
+	
+9. Bring up vm
+	Open terminal, Go to the folder where you created Vagrantfile & issue below command.
+  `vagrant up`
+	`vagrant ssh`
+  `sudo -i`
+  `ip addr show`
+  `vagrant halt `
+	`vagrant destroy`
+	
+10. Create folder vms/fedora
+    `cd`
+   ` mkdir Desktop/vms/fedora`
+   ` cd Desktop/vms/fedora`
+   ` vim Vagrantfile`
+ 
+ Copy paste  below content in the Vagrantfile
+  
+    Vagrant.configure("2") do |config| 
+    config.vm.box = "jacobw/fedora35-arm64" 
+    config.vm.network "private_network", ip: "192.168.56.12"
+    config.vm.provider "vmware_desktop" do |vmware|
+      vmware.gui = true
+      vmware.allowlist_verified = true
+    end
+  end
